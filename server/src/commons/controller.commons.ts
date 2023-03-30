@@ -2,6 +2,7 @@ import { Body, Get, HttpCode, HttpStatus, Param, Post } from "@nestjs/common";
 import { BaseService } from "./service.commons";
 
 export abstract class BaseController<T> {
+
     abstract getService(): BaseService<T>;
 
     @Get('all')
@@ -9,9 +10,20 @@ export abstract class BaseController<T> {
         return await this.getService().findAll();
     }
 
-    @Get('find/:id')
-    async findOne(@Param('id') id): Promise<T> {
-        return await this.getService().findOne(id);
+    @Get('findOneBy/:columnName=:value')
+    async getByColumn(
+        @Param('columnName') columnName: string,
+        @Param('value') value: any,
+    ): Promise<T> {
+        return await this.getService().findOneBy(columnName, value);
+    }
+
+    @Get('findManyBy/:columnName=:value')
+    async getManyByColumn(
+        @Param('columnName') columnName: string,
+        @Param('value') value: any,
+    ): Promise<T[]> {
+        return await this.getService().findManyBy(columnName, value);
     }
 
     @Post('save')

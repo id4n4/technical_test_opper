@@ -7,9 +7,25 @@ export abstract class BaseService<T> {
         return this.getRepository().find();
     }
 
-    findOne(id:any) : Promise<T>{
-        return this.getRepository().findOne(id);
+    async findOneBy(columnName: string, value: any): Promise<T> {
+        const queryBuilder = this.getRepository().createQueryBuilder();
+        const entity = await queryBuilder
+            .select()
+            .where(`${columnName} = :value`, { value })
+            .getOne();
+        
+        return entity;
     }
+    async findManyBy(columnName: string, value: any): Promise<T[]> {
+        const queryBuilder = this.getRepository().createQueryBuilder();
+        const entity = await queryBuilder
+            .select()
+            .where(`${columnName} = :value`, { value })
+            .getMany();
+
+        return entity;
+    }
+
     save(entity: T) : Promise<T>{
         return this.getRepository().save(entity);
     }
