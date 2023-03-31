@@ -1,11 +1,25 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
+import Login from '../views/Login.vue'
+import { isAuthenticated } from '../script/auth'
 
 const routes = [
   {
     path: '/',
+    name: 'Login',
+    component: Login
+  },
+  {
+    path: '/home',
     name: 'Home',
-    component: Home
+    component: Home,
+    beforeEnter(to, from, next) {
+      if (isAuthenticated()) {
+        next()
+      } else {
+        next('/')
+      }
+    }
   },
   {
     path: '/about',
