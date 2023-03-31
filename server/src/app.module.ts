@@ -4,6 +4,7 @@ import { hostname } from 'os';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PersonaModule } from './persona/persona.module';
+import { UsuariosModule } from './usuarios/usuarios.module';
 
 @Module({
   imports: [
@@ -16,7 +17,8 @@ import { PersonaModule } from './persona/persona.module';
       password: 'OneP1ece',
       autoLoadEntities: true
     }),
-    PersonaModule
+    PersonaModule,
+    UsuariosModule
   ],
   controllers: [AppController],
   providers: [AppService],
