@@ -5,17 +5,20 @@
             <form>
                 <div class="flex m-2">
                     <select
+                        v-model="searchFilter"
                         id="countries"
                         class="flex-shrink-0 z-10 inline-flex items-center py-2 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-l-lg hover:bg-gray-200 focus:outline-none focus:ring-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600"
                     >
-                        <option selected>Choose a country</option>
-                        <option value="US">United States</option>
-                        <option value="CA">Canada</option>
-                        <option value="FR">France</option>
-                        <option value="DE">Germany</option>
+                        <option value="" selected disabled>Elige filtro</option>
+                        <option value="documento">Documento</option>
+                        <option value="nombres">Nombre</option>
+                        <option value="apellidos">Apellido</option>
+                        <option value="email">Correo Electrónico</option>
+                        <option value="telefono">Teléfono</option>
                     </select>
                     <div class="relative w-full">
                         <input
+                            v-model="inputSearch"
                             type="search"
                             id="search-dropdown"
                             class="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-r-lg border-l-gray-50 border-l-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-l-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500"
@@ -23,6 +26,7 @@
                             required
                         />
                         <button
+                            @click.prevent="search"
                             type="submit"
                             class="absolute top-0 right-0 p-2.5 text-sm font-medium text-white bg-blue-700 rounded-r-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                         >
@@ -46,11 +50,19 @@
                     </div>
                 </div>
             </form>
+            <div
+                v-if="showMessageError"
+                class="m-2 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                role="alert"
+            >
+                <strong class="font-bold">Error! </strong>
+                <span class="block sm:inline">Debes elegir un filtro para hacer la busqueda</span>
+            </div>
+            <!-- lista -->
             <div class="max-w-3xl mx-auto py-6">
                 <div class="bg-white shadow overflow-hidden sm:rounded-md">
                     <ul class="divide-y divide-gray-200">
-                        <li v-for="item in items"
-                :key="item.id">
+                        <li v-for="item in items" :key="item.id">
                             <div
                                 class="flex items-center justify-between px-4 py-4 sm:px-6"
                             >
@@ -60,21 +72,46 @@
                                     >
                                         {{ item.nombres }} {{ item.apellidos }}
                                     </div>
-                                    <div class="mt-1 flex items-center text-sm leading-5 text-gray-500">
+                                    <div
+                                        class="mt-1 flex items-center text-sm leading-5 text-gray-500"
+                                    >
                                         <span class="truncate"
-                                            >Tipo Documento: {{ findTypeDoc(item.tipoDocumento) }}</span>
+                                            >Tipo Documento:
+                                            {{
+                                                findTypeDoc(item.tipoDocumento)
+                                            }}</span
+                                        >
                                     </div>
-                                    <div class="mt-1 flex items-center text-sm leading-5 text-gray-500">
-                                        <span class="truncate">Documento: {{ item.documento }}</span>
+                                    <div
+                                        class="mt-1 flex items-center text-sm leading-5 text-gray-500"
+                                    >
+                                        <span class="truncate"
+                                            >Documento:
+                                            {{ item.documento }}</span
+                                        >
                                     </div>
-                                    <div class="mt-1 flex items-center text-sm leading-5 text-gray-500">
-                                        <span>Correo Electronico: {{ item.email }}</span>
+                                    <div
+                                        class="mt-1 flex items-center text-sm leading-5 text-gray-500"
+                                    >
+                                        <span
+                                            >Correo Electrónico:
+                                            {{ item.email }}</span
+                                        >
                                     </div>
-                                    <div class="mt-1 flex items-center text-sm leading-5 text-gray-500">
-                                        <span class="truncate">Dirección: {{ item.direccion }}</span>
+                                    <div
+                                        class="mt-1 flex items-center text-sm leading-5 text-gray-500"
+                                    >
+                                        <span class="truncate"
+                                            >Dirección:
+                                            {{ item.direccion }}</span
+                                        >
                                     </div>
-                                    <div class="mt-1 flex items-center text-sm leading-5 text-gray-500">
-                                        <span class="truncate">Telefono: {{ item.telefono }}</span>
+                                    <div
+                                        class="mt-1 flex items-center text-sm leading-5 text-gray-500"
+                                    >
+                                        <span class="truncate"
+                                            >Telefono: {{ item.telefono }}</span
+                                        >
                                     </div>
                                 </div>
                                 <div class="ml-2 flex-shrink-0">
@@ -84,11 +121,12 @@
                                     >
                                         Editar
                                     </button>
-                                    <button
+                                    <!-- <button
+                                        @click.prevent="showModalDelete(item)"
                                         class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-2"
                                     >
                                         Eliminar
-                                    </button>
+                                    </button> -->
                                 </div>
                             </div>
                         </li>
@@ -97,13 +135,18 @@
             </div>
         </div>
         <!-- Modal -->
-        <modal-edit-person :item="this.currentItem" :typeDocument="this.typeDocument" @closeModal="closeModal" v-if="showModalPerson"/>
+        <modal-edit-person
+            :item="this.currentItem"
+            :typeDocument="this.typeDocument"
+            @closeModal="closeModal('person')"
+            v-if="showModalPerson"
+        />
     </section>
 </template>
 
 <script>
 import axios from "axios";
-import modalEditPerson from './Modals/modalEditPerson.vue';
+import modalEditPerson from "./Modals/modalEditPerson.vue";
 
 export default {
     components: { modalEditPerson },
@@ -111,10 +154,15 @@ export default {
     data() {
         return {
             items: [],
+            originalItems: [],
             searchText: "",
             typeDocument: "",
             showModalPerson: false,
-            currentItem: {}
+            currentItem: {},
+            showDelete: false,
+            searchFilter: "",
+            inputSearch: "",
+            showMessageError: false,
         };
     },
     mounted: function () {
@@ -128,6 +176,7 @@ export default {
                 .then((response) => {
                     if (response.data) {
                         this.items = response.data;
+                        this.originalItems = response.data;
                     }
                 })
                 .catch((error) => {
@@ -147,21 +196,69 @@ export default {
                 });
         },
         findTypeDoc(id) {
-            let array = [...this.typeDocument].filter((e) => e.idDocumento == id)
-            return array[0].documento
-            
+            let array = [...this.typeDocument].filter(
+                (e) => e.idDocumento == id
+            );
+            return array[0].documento;
         },
         // create - modal
         showCreateModal() {
             this.showModalPerson = true;
         },
         // edit - modal
-        showEditModal(items){
-            this.currentItem = items
-            this.showModalPerson = true
+        showEditModal(items) {
+            this.currentItem = items;
+            this.showModalPerson = true;
         },
-        closeModal() {
-            this.showModalPerson = false;
+        // showModalDelete(item){
+        //     this.currentItem = item
+        //     this.showDelete = true
+        // },
+        closeModal(modal) {
+            if (modal == "person") {
+                this.getData();
+                this.showModalPerson = false;
+            }
+            // else if(modal == 'delete') this.showDelete = false;
+        },
+
+        // deleteElement(){
+        //     this.showDelete = false;
+        //     const id = this.currentItem.id
+        //     console.log(id)
+        //     axios
+        //         .post(
+        //             "http://localhost:3000/api/persona/delete/" + id
+        //         )
+        //         .then((response) => {
+        //             console.log(response);
+        //         })
+        //         .catch((error) => {
+        //             console.log(error);
+        //         });
+        // }
+        search() {
+            if (this.searchFilter == "") {
+                this.showMessageError = true;
+            } else {
+                this.showMessageError = false;
+                if(this.inputSearch == '') this.items = this.originalItems
+                else {
+                    this.items = [];
+                    for(let i of this.originalItems){
+                        // verificar si el valor ingresado esta dentro de la cadena de nombres o apellidos
+                        if(this.searchFilter == 'nombres' || this.searchFilter == 'apellidos'){
+                            const regex = new RegExp(this.inputSearch,'i')
+                            if(regex.test(i[this.searchFilter])){
+                                this.items.push(i)
+                            }
+                        } else {
+                            if(i[this.searchFilter] == this.inputSearch)
+                                this.items.push(i)
+                        }
+                    }
+                }
+            }
         },
     },
 };
