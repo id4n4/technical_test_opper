@@ -79,6 +79,7 @@
                                 </div>
                                 <div class="ml-2 flex-shrink-0">
                                     <button
+                                        @click.prevent="showEditModal(item)"
                                         class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                                     >
                                         Editar
@@ -96,21 +97,24 @@
             </div>
         </div>
         <!-- Modal -->
-        <div class="modal">holamudno</div>
-        
+        <modal-edit-person :item="this.currentItem" :typeDocument="this.typeDocument" @closeModal="closeModal" v-if="showModalPerson"/>
     </section>
 </template>
 
 <script>
 import axios from "axios";
+import modalEditPerson from './Modals/modalEditPerson.vue';
+
 export default {
+    components: { modalEditPerson },
     name: "listPerson",
     data() {
         return {
             items: [],
             searchText: "",
             typeDocument: "",
-            showModalFlag: false,
+            showModalPerson: false,
+            currentItem: {}
         };
     },
     mounted: function () {
@@ -123,7 +127,6 @@ export default {
                 .get("http://localhost:3000/api/persona/all")
                 .then((response) => {
                     if (response.data) {
-                        console.log(response.data);
                         this.items = response.data;
                     }
                 })
@@ -136,7 +139,6 @@ export default {
                 .get("http://localhost:3000/api/tipoDocumento/all")
                 .then((response) => {
                     if (response.data) {
-                        console.log(response.data);
                         this.typeDocument = response.data;
                     }
                 })
@@ -145,16 +147,21 @@ export default {
                 });
         },
         findTypeDoc(id) {
-            const array = this.typeDocument;
-            console.log(array);
-            console.log(array.filter((e) => e.idDocumento == id)[0].documento);
-            return array.filter((e) => e.idDocumento == id)[0].documento;
+            let array = [...this.typeDocument].filter((e) => e.idDocumento == id)
+            return array[0].documento
+            
         },
-        showModal() {
-            this.showModalFlag = true;
+        // create - modal
+        showCreateModal() {
+            this.showModalPerson = true;
         },
-        hideModal() {
-            this.showModalFlag = false;
+        // edit - modal
+        showEditModal(items){
+            this.currentItem = items
+            this.showModalPerson = true
+        },
+        closeModal() {
+            this.showModalPerson = false;
         },
     },
 };
