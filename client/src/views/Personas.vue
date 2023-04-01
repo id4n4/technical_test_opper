@@ -1,6 +1,6 @@
 <template>
   <section>
-    <List api="/api/persona/all"/>
+    <List/>
   </section>
 </template>
 
