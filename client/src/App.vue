@@ -1,30 +1,32 @@
 <template>
-  <div id="nav">
-    <!-- <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link> -->
-    <router-view />  
-  </div>
+    <section>
+        <Nav v-if="!$route.meta.hideNavigation"/>
+        <router-view />
+    </section>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+// import { isAuthenticated } from "./script/auth";
+import Nav from "./components/Navegation.vue";
 
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>
+export default {
+    components: {
+        Nav,
+    },
+    data() {
+        return {
+            
+        };
+    },
+    computed: {
+        isLoggedIn() {
+            return localStorage.getItem("token") !== null;
+        },
+    },
+    created() {
+        window.addEventListener("storage", () => {
+            this.$forceUpdate();
+        });
+    },
+};
+</script>

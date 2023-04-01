@@ -23,7 +23,7 @@ export default {
         };
     },
     methods: {
-        async login() {
+        login() {
             axios.get('http://localhost:3000/api/usuarios/login/' + this.user + "/" + this.password)
                 .then(response => {
                     if(response.data){

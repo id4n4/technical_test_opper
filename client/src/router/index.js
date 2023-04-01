@@ -1,13 +1,20 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
 import Login from '../views/Login.vue'
+import AdminUser from '../views/AdminUser.vue'
+import Personas from '../views/Personas.vue'
+import Vehiculos from '../views/Vehiculos.vue'
+import Search from '../views/Search.vue'
 import { isAuthenticated } from '../script/auth'
 
 const routes = [
   {
     path: '/',
     name: 'Login',
-    component: Login
+    component: Login,
+    meta: {
+      hideNavigation: true
+    }
   },
   {
     path: '/home',
@@ -22,13 +29,53 @@ const routes = [
     }
   },
   {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  }
+    path: '/adminUser',
+    name: 'AdminUser',
+    component: AdminUser,
+    beforeEnter(to, from, next) {
+      if (isAuthenticated()) {
+        next()
+      } else {
+        next('/')
+      }
+    }
+  },
+  {
+    path: '/personas',
+    name: 'Personas',
+    component: Personas,
+    beforeEnter(to, from, next) {
+      if (isAuthenticated()) {
+        next()
+      } else {
+        next('/')
+      }
+    }
+  },
+  {
+    path: '/vehiculos',
+    name: 'Vehiculos',
+    component: Vehiculos,
+    beforeEnter(to, from, next) {
+      if (isAuthenticated()) {
+        next()
+      } else {
+        next('/')
+      }
+    }
+  },
+  {
+    path: '/search',
+    name: 'Search',
+    component: Search,
+    beforeEnter(to, from, next) {
+      if (isAuthenticated()) {
+        next()
+      } else {
+        next('/')
+      }
+    }
+  },
 ]
 
 const router = createRouter({
