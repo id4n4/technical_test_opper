@@ -10,11 +10,9 @@
                         class="flex-shrink-0 z-10 inline-flex items-center py-2 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-l-lg hover:bg-gray-200 focus:outline-none focus:ring-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600"
                     >
                         <option value="" selected disabled>Elige filtro</option>
-                        <option value="documento">Documento</option>
-                        <option value="nombres">Nombre</option>
-                        <option value="apellidos">Apellido</option>
+                        <option value="usuario">Nombre de Usuario</option>
                         <option value="email">Correo Electrónico</option>
-                        <option value="telefono">Teléfono</option>
+                        <option value="rol">Rol</option>
                     </select>
                     <div class="relative w-full">
                         <input
@@ -78,24 +76,16 @@
                                     <div
                                         class="text-sm leading-5 font-medium text-gray-900"
                                     >
-                                        {{ item.nombres }} {{ item.apellidos }}
+                                        {{ item.usuario }} 
                                     </div>
                                     <div
                                         class="mt-1 flex items-center text-sm leading-5 text-gray-500"
                                     >
                                         <span class="truncate"
-                                            >Tipo Documento:
+                                            >Rol del usuario:
                                             {{
-                                                findTypeDoc(item.tipoDocumento)
+                                                findTypeRol(item.rol)
                                             }}</span
-                                        >
-                                    </div>
-                                    <div
-                                        class="mt-1 flex items-center text-sm leading-5 text-gray-500"
-                                    >
-                                        <span class="truncate"
-                                            >Documento:
-                                            {{ item.documento }}</span
                                         >
                                     </div>
                                     <div
@@ -104,21 +94,6 @@
                                         <span
                                             >Correo Electrónico:
                                             {{ item.email }}</span
-                                        >
-                                    </div>
-                                    <div
-                                        class="mt-1 flex items-center text-sm leading-5 text-gray-500"
-                                    >
-                                        <span class="truncate"
-                                            >Dirección:
-                                            {{ item.direccion }}</span
-                                        >
-                                    </div>
-                                    <div
-                                        class="mt-1 flex items-center text-sm leading-5 text-gray-500"
-                                    >
-                                        <span class="truncate"
-                                            >Telefono: {{ item.telefono }}</span
                                         >
                                     </div>
                                 </div>
@@ -143,30 +118,30 @@
             </div>
         </div>
         <!-- Modals -->
-        <modal-edit-person
+        <ModalUser  
             :item="this.currentItem"
-            :typeDocument="this.typeDocument"
+            :typeRol="this.typeRol"
             :state="this.solicitud"
             @closeModal="closeModal('person')"
-            v-if="showModalPerson"
+            v-if="showModalUser"
         />
     </section>
 </template>
 
 <script>
 import axios from "axios";
-import modalEditPerson from "./Modals/ModalPerson.vue";
+import ModalUser from "./Modals/ModalUser.vue";
 
 export default {
-    components: { modalEditPerson, },
-    name: "listPerson",
+    components: { ModalUser, },
+    name: "listUser",
     data() {
         return {
             items: [],
             originalItems: [],
             searchText: "",
-            typeDocument: "",
-            showModalPerson: false,
+            typeRol: [],
+            showModalUser: false,
             currentItem: {},
             showDelete: false,
             searchFilter: "",
@@ -178,13 +153,14 @@ export default {
     },
     mounted: function () {
         this.getData();
-        this.getTypeDocument();
+        this.getTypeRol();
     },
     methods: {
         getData() {
             axios
-                .get("http://localhost:3000/api/persona/all")
+                .get("http://localhost:3000/api/usuarios/all")
                 .then((response) => {
+                    console.log(response)
                     if (response.data) {
                         this.items = response.data;
                         this.originalItems = response.data;
@@ -194,39 +170,38 @@ export default {
                     console.log(error);
                 });
         },
-        getTypeDocument() {
+        getTypeRol() {
             axios
-                .get("http://localhost:3000/api/tipoDocumento/all")
+                .get("http://localhost:3000/api/roles/all")
                 .then((response) => {
                     if (response.data) {
-                        this.typeDocument = response.data;
+                        this.typeRol = response.data;
                     }
                 })
                 .catch((error) => {
                     console.log(error);
                 });
         },
-        findTypeDoc(id) {
+        findTypeRol(id) {
             let array = []
-            for(let i in this.typeDocument){
-                array.push(this.typeDocument[i])
+            for(let i in this.typeRol){
+                array.push(this.typeRol[i])
             }
             let result = array.filter(
-                (e) => e.idDocumento == id
+                (e) => e.idRoles == id
             );
-            console.log(result)
-            return result ? result[0].documento : '';
+            return result ? result[0].roles : '';
         },
         // create - modal
         showCreateModal() {
             this.solicitud = 'create'
-            this.showModalPerson = true;
+            this.showModalUser = true;
         },
         // edit - modal
         showEditModal(items) {
             this.solicitud = 'update'
             this.currentItem = items;
-            this.showModalPerson = true;
+            this.showModalUser = true;
         },
         // showModalDelete(item){
         //     this.currentItem = item
@@ -235,7 +210,7 @@ export default {
         closeModal(modal) {
             if (modal == "person") {
                 this.getData();
-                this.showModalPerson = false;
+                this.showModalUser = false;
             }
             else if(modal == 'createPerson'){
                 this.getData();
@@ -270,8 +245,8 @@ export default {
                     for (let i of this.originalItems) {
                         // verificar si el valor ingresado esta dentro de la cadena de nombres o apellidos
                         if (
-                            this.searchFilter == "nombres" ||
-                            this.searchFilter == "apellidos"
+                            this.searchFilter == "usuario" ||
+                            this.searchFilter == "rol"
                         ) {
                             const regex = new RegExp(this.inputSearch, "i");
                             if (regex.test(i[this.searchFilter].toLowerCase())) {

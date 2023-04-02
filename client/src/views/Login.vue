@@ -241,7 +241,7 @@ export default {
                             "token",
                             response.data.idUsuarios + "-" + response.data.rol
                         );
-                        this.$router.push("/usuario");
+                        this.$router.push("/adminUser");
                     }
                 })
                 .catch((error) => {

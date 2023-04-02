@@ -25,9 +25,9 @@
                                     >Personas
                                 </router-link>
                                 <router-link
-                                    to="/vehiculo"
+                                    to="/vehiculos"
                                     class="px-3 py-2 rounded-md text-sm font-medium text-white hover:text-gray-300 hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700"
-                                    >Vehiculo
+                                    >Vehiculos
                                 </router-link>
                                 <router-link
                                     to="/"

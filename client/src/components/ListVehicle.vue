@@ -207,15 +207,10 @@ export default {
                 });
         },
         findTypeDoc(id) {
-            let array = []
-            for(let i in this.typeDocument){
-                array.push(this.typeDocument[i])
-            }
-            let result = array.filter(
+            let array = [...this.typeDocument].filter(
                 (e) => e.idDocumento == id
             );
-            console.log(result)
-            return result ? result[0].documento : '';
+            return array[0].documento;
         },
         // create - modal
         showCreateModal() {
