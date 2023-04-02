@@ -48,6 +48,12 @@
                             <span class="sr-only">Search</span>
                         </button>
                     </div>
+                    <button
+                        @click="showCreateModal()"
+                        class="color_rose text-white font-bold py-2 px-4 rounded"
+                    >
+                        Crear
+                    </button>
                 </div>
             </form>
             <div
@@ -56,7 +62,9 @@
                 role="alert"
             >
                 <strong class="font-bold">Error! </strong>
-                <span class="block sm:inline">Debes elegir un filtro para hacer la busqueda</span>
+                <span class="block sm:inline"
+                    >Debes elegir un filtro para hacer la busqueda</span
+                >
             </div>
             <!-- lista -->
             <div class="max-w-3xl mx-auto py-6">
@@ -117,7 +125,7 @@
                                 <div class="ml-2 flex-shrink-0">
                                     <button
                                         @click.prevent="showEditModal(item)"
-                                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                                        class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
                                     >
                                         Editar
                                     </button>
@@ -134,10 +142,11 @@
                 </div>
             </div>
         </div>
-        <!-- Modal -->
+        <!-- Modals -->
         <modal-edit-person
             :item="this.currentItem"
             :typeDocument="this.typeDocument"
+            :state="this.solicitud"
             @closeModal="closeModal('person')"
             v-if="showModalPerson"
         />
@@ -146,10 +155,10 @@
 
 <script>
 import axios from "axios";
-import modalEditPerson from "./Modals/modalEditPerson.vue";
+import modalEditPerson from "./Modals/modalPerson.vue";
 
 export default {
-    components: { modalEditPerson },
+    components: { modalEditPerson, },
     name: "listPerson",
     data() {
         return {
@@ -163,6 +172,8 @@ export default {
             searchFilter: "",
             inputSearch: "",
             showMessageError: false,
+            showModalCreatePerson: false,
+            solicitud:'',
         };
     },
     mounted: function () {
@@ -203,10 +214,12 @@ export default {
         },
         // create - modal
         showCreateModal() {
+            this.solicitud = 'create'
             this.showModalPerson = true;
         },
         // edit - modal
         showEditModal(items) {
+            this.solicitud = 'update'
             this.currentItem = items;
             this.showModalPerson = true;
         },
@@ -218,6 +231,10 @@ export default {
             if (modal == "person") {
                 this.getData();
                 this.showModalPerson = false;
+            }
+            else if(modal == 'createPerson'){
+                this.getData();
+                this.showModalCreatePerson = false;
             }
             // else if(modal == 'delete') this.showDelete = false;
         },
@@ -242,19 +259,22 @@ export default {
                 this.showMessageError = true;
             } else {
                 this.showMessageError = false;
-                if(this.inputSearch == '') this.items = this.originalItems
+                if (this.inputSearch == "") this.items = this.originalItems;
                 else {
                     this.items = [];
-                    for(let i of this.originalItems){
+                    for (let i of this.originalItems) {
                         // verificar si el valor ingresado esta dentro de la cadena de nombres o apellidos
-                        if(this.searchFilter == 'nombres' || this.searchFilter == 'apellidos'){
-                            const regex = new RegExp(this.inputSearch,'i')
-                            if(regex.test(i[this.searchFilter])){
-                                this.items.push(i)
+                        if (
+                            this.searchFilter == "nombres" ||
+                            this.searchFilter == "apellidos"
+                        ) {
+                            const regex = new RegExp(this.inputSearch, "i");
+                            if (regex.test(i[this.searchFilter].toLowerCase())) {
+                                this.items.push(i);
                             }
                         } else {
-                            if(i[this.searchFilter] == this.inputSearch)
-                                this.items.push(i)
+                            if (i[this.searchFilter] == this.inputSearch)
+                                this.items.push(i);
                         }
                     }
                 }
@@ -265,4 +285,10 @@ export default {
 </script>
 
 <style>
+.color_rose{
+    background: #e11d48;
+}
+.color_rose:hover{
+    background: #fb7185;
+}
 </style>
