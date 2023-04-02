@@ -14,13 +14,8 @@
                         <div class="hidden md:block">
                             <div class="ml-10 flex items-baseline space-x-4">
                                 <router-link
-                                    to="/home"
-                                    class="px-3 py-2 rounded-md text-sm font-medium text-white bg-gray-900 focus:outline-none focus:text-white focus:bg-gray-700"
-                                    >Home
-                                </router-link>
-                                <router-link
                                     to="/adminUser"
-                                    class="px-3 py-2 rounded-md text-sm font-medium text-white hover:text-gray-300 hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700"
+                                    class="px-3 py-2 rounded-md text-sm font-medium text-white bg-gray-900 focus:outline-none focus:text-white focus:bg-gray-700"
                                 >
                                     Usuarios
                                 </router-link>
@@ -35,9 +30,9 @@
                                     >Vehiculo
                                 </router-link>
                                 <router-link
-                                    to="/search"
+                                    to="/"
                                     class="px-3 py-2 rounded-md text-sm font-medium text-white hover:text-gray-300 hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700"
-                                    >Buscar</router-link
+                                    >Cerrar Sesión</router-link
                                 >
                             </div>
                         </div>

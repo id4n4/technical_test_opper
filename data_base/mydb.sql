@@ -35,7 +35,7 @@ CREATE TABLE `persona` (
   UNIQUE KEY `document` (`tipoDocumento`,`documento`),
   KEY `fk_personas_tipodocumento` (`tipoDocumento`),
   CONSTRAINT `fk_personas_tipodocumento` FOREIGN KEY (`tipoDocumento`) REFERENCES `tipo_documento` (`idDocumento`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -44,7 +44,7 @@ CREATE TABLE `persona` (
 
 LOCK TABLES `persona` WRITE;
 /*!40000 ALTER TABLE `persona` DISABLE KEYS */;
-INSERT INTO `persona` VALUES (1,1,1010093173,'Juan David','Sanchez Hoyos','tv 2a #23-57',3013424744,'nagatiitoo@hotmail.com'),(3,2,101093173,'sebastian','hernandez','granja',1010093,'monorrea@gmail.com');
+INSERT INTO `persona` VALUES (1,1,1010093173,'Juan David','Sanchez Hoyos','tv 2a #23-57 Barrio la granja',3013424744,'nagatiitoo@hotmail.com'),(2,2,10103173,'sebastian','Hernandez','granja',1010093,'monorrea@gmail.com'),(3,2,101093173,'sebastian','hernandez','granja',1010093,'monorrea@gmail.com'),(7,3,102324552,'Adolfo','Ramirez Hernandez','Barrio Los Robles',3202020404,'gg@gmail.com');
 /*!40000 ALTER TABLE `persona` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -110,9 +110,10 @@ CREATE TABLE `usuarios` (
   `password` varchar(45) NOT NULL,
   `rol` int NOT NULL DEFAULT '2',
   PRIMARY KEY (`idUsuarios`),
+  UNIQUE KEY `usuario_UNIQUE` (`usuario`),
   KEY `fk_usuarios_roles_idx` (`rol`) /*!80000 INVISIBLE */,
   CONSTRAINT `fk_usuarios_roles` FOREIGN KEY (`rol`) REFERENCES `roles` (`idRoles`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -121,7 +122,7 @@ CREATE TABLE `usuarios` (
 
 LOCK TABLES `usuarios` WRITE;
 /*!40000 ALTER TABLE `usuarios` DISABLE KEYS */;
-INSERT INTO `usuarios` VALUES (1,'jdavid','nagatiitoo@hotmail.com','123david',1);
+INSERT INTO `usuarios` VALUES (2,'jdavid','nagatiitoo@hotmail.com','123david',1),(4,'administrador','nagatiitoo@hotmail.com','123',1);
 /*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -169,4 +170,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-03-31 20:40:08
+-- Dump completed on 2023-04-01 20:29:45
