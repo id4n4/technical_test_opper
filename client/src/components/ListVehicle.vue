@@ -10,11 +10,14 @@
                         class="flex-shrink-0 z-10 inline-flex items-center py-2 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-l-lg hover:bg-gray-200 focus:outline-none focus:ring-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600"
                     >
                         <option value="" selected disabled>Elige filtro</option>
-                        <option value="documento">Documento</option>
-                        <option value="nombres">Nombre</option>
-                        <option value="apellidos">Apellido</option>
-                        <option value="email">Correo Electrónico</option>
-                        <option value="telefono">Teléfono</option>
+                        <option value="placa">Placa</option>
+                        <option value="marca">Marca</option>
+                        <option value="modelo">Modelo</option>
+                        <option value="año">Año</option>
+                        <option value="color">Color</option>
+                        <option value="arrendatario">Arrendatario</option>
+                        <option value="fechaRegistro">Fecha de registro</option>
+                        <option value="ciudad">Ciudad</option>
                     </select>
                     <div class="relative w-full">
                         <input
@@ -76,17 +79,17 @@
                             >
                                 <div class="flex-1 truncate">
                                     <div
-                                        class="text-sm leading-5 font-medium text-gray-900"
+                                        class="text-xl leading-5 font-medium text-gray-900"
                                     >
-                                        {{ item.nombres }} {{ item.apellidos }}
+                                        {{ item.marca }} {{ item.modelo }} {{item.año}}
                                     </div>
                                     <div
                                         class="mt-1 flex items-center text-sm leading-5 text-gray-500"
                                     >
                                         <span class="truncate"
-                                            >Tipo Documento:
+                                            >Arrendatario:
                                             {{
-                                                findTypeDoc(item.tipoDocumento)
+                                                findPerson(item.arrendatario)
                                             }}</span
                                         >
                                     </div>
@@ -94,16 +97,16 @@
                                         class="mt-1 flex items-center text-sm leading-5 text-gray-500"
                                     >
                                         <span class="truncate"
-                                            >Documento:
-                                            {{ item.documento }}</span
+                                            >Color:
+                                            {{ item.color }}</span
                                         >
                                     </div>
                                     <div
                                         class="mt-1 flex items-center text-sm leading-5 text-gray-500"
                                     >
                                         <span
-                                            >Correo Electrónico:
-                                            {{ item.email }}</span
+                                            >Fecha de Registro:
+                                            {{ item.fechaRegistro }}</span
                                         >
                                     </div>
                                     <div
@@ -111,14 +114,21 @@
                                     >
                                         <span class="truncate"
                                             >Dirección:
-                                            {{ item.direccion }}</span
+                                            {{ item.direccionUbicacion }}</span
                                         >
                                     </div>
                                     <div
                                         class="mt-1 flex items-center text-sm leading-5 text-gray-500"
                                     >
                                         <span class="truncate"
-                                            >Telefono: {{ item.telefono }}</span
+                                            >Ciudad: {{ item.ciudad }}</span
+                                        >
+                                    </div>
+                                    <div
+                                        class="mt-1 flex items-center text-sm leading-5 text-gray-500"
+                                    >
+                                        <span class="truncate"
+                                            >Observaciones: {{ item.observaciones }}</span
                                         >
                                     </div>
                                 </div>
@@ -143,47 +153,46 @@
             </div>
         </div>
         <!-- Modals -->
-        <modal-edit-person
+        <ModalVehicle
             :item="this.currentItem"
-            :typeDocument="this.typeDocument"
+            :listPerson="this.listaPersonas"
             :state="this.solicitud"
-            @closeModal="closeModal('person')"
-            v-if="showModalPerson"
+            @closeModal="closeModal()"
+            v-if="showModalVehicle"
         />
     </section>
 </template>
 
 <script>
 import axios from "axios";
-import modalEditPerson from "./Modals/ModalPerson.vue";
+import ModalVehicle from "./Modals/ModalVehicle.vue";
 
 export default {
-    components: { modalEditPerson, },
+    components: { ModalVehicle, },
     name: "listPerson",
     data() {
         return {
             items: [],
             originalItems: [],
             searchText: "",
-            typeDocument: "",
-            showModalPerson: false,
+            listaPersonas: [],
+            showModalVehicle: false,
             currentItem: {},
             showDelete: false,
             searchFilter: "",
             inputSearch: "",
             showMessageError: false,
-            showModalCreatePerson: false,
             solicitud:'',
         };
     },
     mounted: function () {
         this.getData();
-        this.getTypeDocument();
+        this.getListPerson();
     },
     methods: {
         getData() {
             axios
-                .get("http://localhost:3000/api/persona/all")
+                .get("http://localhost:3000/api/vehiculo/all")
                 .then((response) => {
                     if (response.data) {
                         this.items = response.data;
@@ -194,48 +203,48 @@ export default {
                     console.log(error);
                 });
         },
-        getTypeDocument() {
+        getListPerson() {
             axios
-                .get("http://localhost:3000/api/tipoDocumento/all")
+                .get("http://localhost:3000/api/persona/all")
                 .then((response) => {
                     if (response.data) {
-                        this.typeDocument = response.data;
+                        this.listaPersonas = response.data;
                     }
                 })
                 .catch((error) => {
                     console.log(error);
                 });
         },
-        findTypeDoc(id) {
-            let array = [...this.typeDocument].filter(
-                (e) => e.idDocumento == id
-            );
-            return array[0].documento;
+        findPerson(id) {
+            if(id){
+                let array = []
+                for(let i in this.listaPersonas){
+                    array.push(this.listaPersonas[i])
+                }
+                let result = array.filter(
+                    (e) => e.id == id
+                );
+                return result ? result[0].nombres + ' ' + result[0].apellidos : '';
+            }
         },
         // create - modal
         showCreateModal() {
             this.solicitud = 'create'
-            this.showModalPerson = true;
+            this.showModalVehicle = true;
         },
         // edit - modal
         showEditModal(items) {
             this.solicitud = 'update'
             this.currentItem = items;
-            this.showModalPerson = true;
+            this.showModalVehicle = true;
         },
         // showModalDelete(item){
         //     this.currentItem = item
         //     this.showDelete = true
         // },
-        closeModal(modal) {
-            if (modal == "person") {
-                this.getData();
-                this.showModalPerson = false;
-            }
-            else if(modal == 'createPerson'){
-                this.getData();
-                this.showModalCreatePerson = false;
-            }
+        closeModal() {
+            this.getData();
+            this.showModalVehicle = false;
             // else if(modal == 'delete') this.showDelete = false;
         },
 
@@ -259,17 +268,33 @@ export default {
                 this.showMessageError = true;
             } else {
                 this.showMessageError = false;
-                if (this.inputSearch == "") this.items = this.originalItems;
+                if (this.inputSearch == "" && this.searchFilter != 'arrendatario') this.items = this.originalItems;
                 else {
                     this.items = [];
                     for (let i of this.originalItems) {
                         // verificar si el valor ingresado esta dentro de la cadena de nombres o apellidos
                         if (
-                            this.searchFilter == "nombres" ||
+                            this.searchFilter == "placa" ||
+                            this.searchFilter == "marca" ||
+                            this.searchFilter == "modelo" ||
+                            this.searchFilter == "color" ||
+                            this.searchFilter == "arrendatario" ||
+                            this.searchFilter == "ciudad" ||
                             this.searchFilter == "apellidos"
                         ) {
                             const regex = new RegExp(this.inputSearch, "i");
-                            if (regex.test(i[this.searchFilter].toLowerCase())) {
+                            // como arrendatario viene por id y yo lo estoy buscando por nombre o apellido debo hacer un filtro adicional
+                            if(this.searchFilter == 'arrendatario'){
+                                let ids = []
+                                this.listaPersonas.map(e => {
+                                    if(regex.test((e.nombres + e.apellidos).toLowerCase()))
+                                        ids.push(e.id)
+                                })
+                                console.log(ids)
+                                if(ids.some( e => e == i[this.searchFilter]))
+                                    this.items.push(i)
+                            }
+                            else if (regex.test(i[this.searchFilter].toLowerCase())) {
                                 this.items.push(i);
                             }
                         } else {

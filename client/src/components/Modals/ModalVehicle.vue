@@ -32,61 +32,61 @@
                     <div class="px-4">
                         <div class="my-3">
                             <label
-                                for="tipoDocumento"
+                                for="arrendatario"
                                 class="block font-medium text-gray-700"
-                                >Tipo de documento de identidad:</label
+                                >Arrendatario</label
                             >
                             <select
-                                v-model="tipoDocumento"
-                                id="tipoDocumento"
-                                name="tipoDocumento"
+                                v-model="arrendatario"
+                                id="arrendatario"
+                                name="arrendatario"
                                 class="mt-1 block w-full rounded-md bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0"
                             >
                                 <option
-                                    v-for="item in typeDocument"
-                                    :key="item.idDocumento"
-                                    :value="item.idDocumento"
+                                    v-for="item in listPerson"
+                                    :key="item.id"
+                                    :value="item.id"
                                 >
-                                    {{ item.documento }}
+                                    {{ item.nombres }} {{ item.apellidos }}
                                 </option>
                             </select>
                         </div>
                         <div class="my-3">
                             <label
-                                for="documento"
+                                for="placa"
                                 class="block font-medium text-gray-700"
-                                >Número de documento</label
+                                >Placa</label
                             >
                             <input
-                                v-model="documento"
-                                type="number"
-                                name="documento"
+                                v-model="placa"
+                                type="text"
+                                name="placa"
                                 class="mt-1 block w-full rounded-md bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0"
                             />
                         </div>
                         <div class="my-3">
                             <label
-                                for="name"
+                                for="marca"
                                 class="block font-medium text-gray-700"
-                                >Nombres</label
+                                >Marca</label
                             >
                             <input
-                                v-model="nombres"
+                                v-model="marca"
                                 type="text"
-                                name="nombred"
+                                name="marca"
                                 class="mt-1 block w-full rounded-md bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0"
                             />
                         </div>
                         <div class="my-3">
                             <label
-                                for="apellidos"
+                                for="modelo"
                                 class="block font-medium text-gray-700"
-                                >Apellidos</label
+                                >Modelo</label
                             >
                             <input
-                                v-model="apellidos"
+                                v-model="modelo"
                                 type="text"
-                                name="apellidos"
+                                name="modelo"
                                 class="mt-1 block w-full rounded-md bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0"
                             />
                         </div>
@@ -94,10 +94,10 @@
                             <label
                                 for="direccion"
                                 class="block font-medium text-gray-700"
-                                >Direccion</label
+                                >Direccion de ubicacion</label
                             >
                             <input
-                                v-model="direccion"
+                                v-model="direccionUbicacion"
                                 type="text"
                                 name="direccion"
                                 class="mt-1 block w-full rounded-md bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0"
@@ -105,27 +105,66 @@
                         </div>
                         <div class="my-3">
                             <label
-                                for="email"
+                                for="color"
                                 class="block font-medium text-gray-700"
-                                >Correo electrónico</label
-                            >
+                                >Color del vehiculo</label
+                            > 
                             <input
-                                v-model="email"
-                                type="email"
-                                name="email"
+                                v-model="color"
+                                type="text"
+                                name="color"
                                 class="mt-1 block w-full rounded-md bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0"
                             />
                         </div>
                         <div class="my-3">
                             <label
-                                for="phone"
+                                for="año"
                                 class="block font-medium text-gray-700"
-                                >Teléfono</label
+                                >Año de fabricación del vehiculo</label
                             >
                             <input
-                                v-model="telefono"
+                                v-model="año"
                                 type="number"
-                                name="phone"
+                                name="año"
+                                class="mt-1 block w-full rounded-md bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0"
+                            />
+                        </div>
+                        <div class="my-3">
+                            <label
+                                for="ciudad"
+                                class="block font-medium text-gray-700"
+                                >Ciudad</label
+                            >
+                            <input
+                                v-model="ciudad"
+                                type="text"
+                                name="ciudad"
+                                class="mt-1 block w-full rounded-md bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0"
+                            />
+                        </div>
+                        <div class="my-3">
+                            <label
+                                for="fechaRegistro"
+                                class="block font-medium text-gray-700"
+                                >Fecha de Registro</label
+                            >
+                            <input
+                                v-model="fechaRegistro"
+                                type="date"
+                                name="fechaRegistro"
+                                class="mt-1 block w-full rounded-md bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0"
+                            />
+                        </div>
+                        <div class="my-3">
+                            <label
+                                for="observaciones"
+                                class="block font-medium text-gray-700"
+                                >Observaciones</label
+                            >
+                            <input
+                                v-model="observaciones"
+                                type="text"
+                                name="observaciones"
                                 class="mt-1 block w-full rounded-md bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0"
                             />
                         </div>
@@ -180,7 +219,7 @@ export default {
         item: {
             type: Object,
         },
-        typeDocument: {
+        listPerson: {
             type: Array,
         },
         state:{
@@ -190,13 +229,16 @@ export default {
     data() {
         return {
             id: "",
-            tipoDocumento: "",
-            documento: "",
-            nombres: "",
-            apellidos: "",
-            direccion: "",
-            email: "",
-            telefono: "",
+            placa: "",
+            marca: "",
+            modelo: "",
+            año: "",
+            color: "",
+            arrendatario: "",
+            observaciones: "",
+            fechaRegistro: "",
+            direccionUbicacion: "",
+            ciudad: "",
             showCheck: false,
             messageError: '',
             showError: false,
@@ -209,38 +251,50 @@ export default {
     },
     methods: {
         importData() {
-            this.id = this.item.id;
-            this.tipoDocumento = this.item.tipoDocumento;
-            this.documento = this.item.documento;
-            this.nombres = this.item.nombres;
-            this.apellidos = this.item.apellidos;
-            this.direccion = this.item.direccion;
-            this.email = this.item.email;
-            this.telefono = this.item.telefono;
+            this.id = this.item.idVehiculo;
+            this.placa = this.item.placa;
+            this.marca = this.item.marca;
+            this.modelo = this.item.modelo;
+            this.año = this.item.año;
+            this.color = this.item.color;
+            this.arrendatario = this.item.arrendatario;
+            this.observaciones = this.item.observaciones;
+
+            const fecha = this.item.fechaRegistro.split("T")[0]
+
+            this.fechaRegistro = fecha;
+            this.direccionUbicacion = this.item.direccionUbicacion
+            this.ciudad = this.item.ciudad
         },
         updateDataServer() {
             let data = {
-                tipoDocumento: this.tipoDocumento,
-                documento: this.documento,
-                nombres: this.nombres,
-                apellidos: this.apellidos,
-                direccion: this.direccion,
-                telefono: this.telefono,
+                placa: this.placa,
+                marca: this.marca,
+                modelo: this.modelo,
+                año: this.año,
+                color: this.color,
+                arrendatario: this.arrendatario,
                 email: this.email,
+                observaciones: this.observaciones,
+                fechaRegistro: this.fechaRegistro,
+                direccionUbicacion: this.direccionUbicacion,
+                ciudad: this.ciudad
             };
             for(let item in data){
                 if(data[item] == '') {
-                    this.messageError = "No puede haber campos vacios"
-                    this.showError = true;
-                    return 1
+                    if(item != 'arrendatario' || item != 'observaciones'){
+                        this.messageError = "No puede haber campos vacios"
+                        this.showError = true;
+                        return 1
+                    }
                 }
             }
             if(this.state == 'update'){
-                data.id = this.id
+                data.idVehiculo = this.id
             }
             axios
                 .post(
-                    "http://localhost:3000/api/persona/save",
+                    "http://localhost:3000/api/vehiculo/save",
                     JSON.stringify(data),
                     {
                         headers: {
@@ -253,7 +307,7 @@ export default {
                     this.showCheck = true;
                 })
                 .catch((error) => {
-                    this.messageError = "Ya existe otra persona con el mismo tipo y número de documento"
+                    this.messageError = "algo salio mal"
                     this.showError = true;
                     console.log(error);
                 });

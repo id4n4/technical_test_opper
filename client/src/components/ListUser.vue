@@ -74,7 +74,7 @@
                             >
                                 <div class="flex-1 truncate">
                                     <div
-                                        class="text-sm leading-5 font-medium text-gray-900"
+                                        class="text-xl leading-5 font-medium text-gray-900"
                                     >
                                         {{ item.usuario }} 
                                     </div>
@@ -122,7 +122,7 @@
             :item="this.currentItem"
             :typeRol="this.typeRol"
             :state="this.solicitud"
-            @closeModal="closeModal('person')"
+            @closeModal="closeModal()"
             v-if="showModalUser"
         />
     </section>
@@ -207,15 +207,9 @@ export default {
         //     this.currentItem = item
         //     this.showDelete = true
         // },
-        closeModal(modal) {
-            if (modal == "person") {
-                this.getData();
-                this.showModalUser = false;
-            }
-            else if(modal == 'createPerson'){
-                this.getData();
-                this.showModalCreatePerson = false;
-            }
+        closeModal() {
+            this.getData();
+            this.showModalUser = false;
             // else if(modal == 'delete') this.showDelete = false;
         },
 
