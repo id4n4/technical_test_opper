@@ -44,5 +44,5 @@ npm run serve
 ```
 
 ### Ingresar a tu navegador web localhost:8080
-![alt text](https://imgur.com/a/i7rlUiI)
+[![Web example - Login](https://i.postimg.cc/15k4nwLT/IG3x5z-J-Imgur.png)](https://postimg.cc/xcP9BJjy)
 
